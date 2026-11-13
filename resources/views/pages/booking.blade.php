@@ -1,14 +1,19 @@
 <x-layouts.public
     title="Book an Appointment"
-    description="Read how appointment enquiries currently work at BHA Help Ladder. Online booking is coming in Phase 2."
+    description="Request a private appointment from current counsellor availability at BHA Help Ladder."
 >
     <section class="bg-bha-50 py-16 sm:py-24">
         <div class="public-container grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
                 <p class="eyebrow">Book an appointment</p>
-                <h1 class="display-title mt-5">Online scheduling is not available yet.</h1>
-                <p class="mt-6 max-w-2xl text-lg leading-8 text-zinc-600">The secure appointment system is planned for Phase 2. Until then, start with a brief general enquiry and the BHA Help Ladder team can respond about a suitable next step.</p>
-                <a href="{{ route('contact') }}" class="btn-primary mt-8">Send a general enquiry <span class="ml-2" aria-hidden="true">→</span></a>
+                <h1 class="display-title mt-5">Request a private appointment online.</h1>
+                <p class="mt-6 max-w-2xl text-lg leading-8 text-zinc-600">Verified client accounts can choose a service, counsellor and currently available time. Appointment details remain inside the authenticated portal.</p>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn-primary mt-8">Open your appointment portal</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn-primary mt-8">Sign in to book</a>
+                    <a href="{{ route('register') }}" class="btn-secondary mt-8 ml-2">Create client account</a>
+                @endauth
             </div>
             <div class="soft-card">
                 <div class="flex items-start gap-4">
@@ -25,14 +30,14 @@
     <section class="py-20 sm:py-28">
         <div class="public-container">
             <div class="max-w-2xl">
-                <p class="eyebrow">What to expect now</p>
-                <h2 class="section-title mt-4">A simple enquiry-first process.</h2>
+                <p class="eyebrow">What to expect</p>
+                <h2 class="section-title mt-4">A simple, privacy-aware booking process.</h2>
             </div>
             <ol class="mt-12 grid gap-5 md:grid-cols-3">
                 @foreach ([
-                    ['01', 'Send the essentials', 'Provide your name, email address and a brief general reason for contacting BHA Help Ladder.'],
-                    ['02', 'Protect sensitive details', 'Do not include diagnoses, detailed history, therapy notes or urgent safety information.'],
-                    ['03', 'Wait for team follow-up', 'A team member can respond about current availability and the most appropriate next step.'],
+                    ['01', 'Choose a suitable service', 'Select a service, session format and counsellor from your verified client portal.'],
+                    ['02', 'Choose live availability', 'Times account for working hours, breaks, blocked dates, existing sessions and buffers.'],
+                    ['03', 'Review and request', 'Confirm the time without entering diagnoses, therapy notes or other sensitive clinical details.'],
                 ] as [$number, $title, $copy])
                     <li class="soft-card">
                         <span class="text-xs font-black tracking-[0.2em] text-bha-500">{{ $number }}</span>
@@ -47,9 +52,9 @@
     <section class="pb-20 sm:pb-28">
         <div class="public-container max-w-4xl">
             <div class="rounded-[2.5rem] bg-ink p-8 text-white sm:p-12">
-                <p class="eyebrow !text-bha-300">Coming in Phase 2</p>
+                <p class="eyebrow !text-bha-300">Available now</p>
                 <h2 class="mt-4 font-display text-3xl font-semibold">Secure, availability-aware appointment booking.</h2>
-                <p class="mt-4 text-sm leading-7 text-zinc-300">Clients will be able to choose a service, session mode, counsellor and available time, then review and submit a booking. No working form is shown now because that system has not yet been built.</p>
+                <p class="mt-4 text-sm leading-7 text-zinc-300">Verified clients can review and submit a request. Reminders are discreet and detailed joining information stays inside the portal.</p>
             </div>
         </div>
     </section>

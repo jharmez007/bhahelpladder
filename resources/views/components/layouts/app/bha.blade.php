@@ -12,8 +12,17 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group heading="Workspace" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('*.dashboard') || request()->routeIs('dashboard')">Dashboard</flux:navlist.item>
+                    @if (auth()->user()->role === \App\Enums\UserRole::Client)
+                        <flux:navlist.item icon="calendar-days" :href="route('client.appointments.index')" :current="request()->routeIs('client.appointments.*')">Appointments</flux:navlist.item>
+                        <flux:navlist.item icon="plus-circle" :href="route('client.appointments.book')" :current="request()->routeIs('client.appointments.book')">Book a session</flux:navlist.item>
+                    @elseif (auth()->user()->role === \App\Enums\UserRole::Counsellor)
+                        <flux:navlist.item icon="calendar-days" :href="route('counsellor.appointments.index')" :current="request()->routeIs('counsellor.appointments.*')">Assigned appointments</flux:navlist.item>
+                        <flux:navlist.item icon="clock" :href="route('counsellor.availability')" :current="request()->routeIs('counsellor.availability')">Availability</flux:navlist.item>
+                    @endif
                     @if (auth()->user()->role === \App\Enums\UserRole::Administrator)
                         <flux:navlist.item icon="inbox" :href="route('admin.enquiries.index')" :current="request()->routeIs('admin.enquiries.*')">Enquiries</flux:navlist.item>
+                        <flux:navlist.item icon="calendar-days" :href="route('admin.appointments.index')" :current="request()->routeIs('admin.appointments.*')">Appointments</flux:navlist.item>
+                        <flux:navlist.item icon="wrench-screwdriver" :href="route('admin.booking-setup')" :current="request()->routeIs('admin.booking-setup')">Booking setup</flux:navlist.item>
                     @endif
                 </flux:navlist.group>
             </flux:navlist>
@@ -22,7 +31,7 @@
 
             <div class="mb-3 rounded-2xl bg-bha-50 p-4 text-xs leading-5 text-zinc-600">
                 <p class="font-bold text-bha-800">{{ auth()->user()->role->label() }} access</p>
-                <p class="mt-1">Appointment tools will appear here in Phase 2.</p>
+                <p class="mt-1">Times are stored in UTC and displayed in West Africa Time.</p>
             </div>
 
             <flux:dropdown position="bottom" align="start">

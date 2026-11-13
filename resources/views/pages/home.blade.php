@@ -1,13 +1,16 @@
 <x-layouts.public
     title="Counselling & Mental Health Advocacy"
-    description="BHA Help Ladder offers counselling, school support, educator seminars and community outreach in Abuja, Nigeria."
+    description="BHA Help Ladder offers counselling, school support, educator seminars and community outreach."
 >
+    @include('pages.partials.home-hero')
+
+    {{-- Retained temporarily as a reference while the final carousel photography is supplied.
     <section class="relative overflow-hidden bg-bha-50">
         <div class="absolute -right-32 -top-32 size-[32rem] rounded-full border-[5rem] border-bha-100/70" aria-hidden="true"></div>
         <div class="absolute bottom-10 right-[34%] size-24 rounded-full bg-bha-200/50 blur-2xl" aria-hidden="true"></div>
         <div class="public-container relative grid min-h-[calc(100vh-5rem)] items-center gap-12 py-16 lg:grid-cols-[1.08fr_0.92fr] lg:py-24">
             <div class="max-w-3xl">
-                <p class="eyebrow">Counselling &amp; mental health advocacy · Abuja</p>
+                <p class="eyebrow">Counselling &amp; mental health advocacy</p>
                 <h1 class="display-title mt-5">A steady hand when life feels difficult to navigate.</h1>
                 <p class="mt-7 max-w-2xl text-lg leading-8 text-zinc-600 sm:text-xl">BHA Help Ladder creates space for people, educators and communities to seek support, build awareness and take a considered next step.</p>
                 <div class="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -38,20 +41,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="absolute -bottom-5 -left-5 rounded-2xl border border-bha-100 bg-white px-5 py-4 shadow-xl">
-                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-bha-600">Based in</p>
-                    <p class="mt-1 text-sm font-extrabold text-ink">{{ config('organization.location') }}</p>
-                </div>
             </div>
         </div>
     </section>
+    --}}
 
     <section class="py-20 sm:py-28" id="services">
         <div class="public-container">
             <div class="max-w-2xl">
                 <p class="eyebrow">Ways we can help</p>
                 <h2 class="section-title mt-4">Support shaped around people and the places they learn and live.</h2>
-                <p class="mt-5 text-base leading-7 text-zinc-600">Our Phase 1 website introduces the services available. A member of the team will confirm what support is appropriate and available after an enquiry.</p>
+                <p class="mt-5 text-base leading-7 text-zinc-600">Explore the services available and choose a suitable place to begin. A member of the team will confirm what support is appropriate for your needs.</p>
             </div>
 
             <div class="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -82,13 +82,13 @@
                 <div>
                     <p class="eyebrow !text-bha-300">How appointments work</p>
                     <h2 class="mt-4 font-display text-3xl font-semibold leading-tight sm:text-4xl">A clear path from enquiry to support.</h2>
-                    <p class="mt-5 text-sm leading-7 text-zinc-300">Online scheduling will arrive in Phase 2. For now, the process begins with a brief, privacy-conscious enquiry.</p>
+                    <p class="mt-5 text-sm leading-7 text-zinc-300">Verified client accounts can request a time from live counsellor availability. General questions can still begin with a privacy-conscious enquiry.</p>
                 </div>
                 <ol class="grid gap-4 sm:grid-cols-3">
                     @foreach ([
-                        ['1', 'Read the booking guide', 'See what is available now and what not to include in an enquiry.'],
-                        ['2', 'Send a brief enquiry', 'Share only your contact details and a general reason for getting in touch.'],
-                        ['3', 'Await a response', 'The team can follow up about an appropriate next step and availability.'],
+                        ['1', 'Choose a service', 'Select the type of support that best matches where you would like to begin.'],
+                        ['2', 'Pick an available time', 'View live counsellor availability and choose a suitable appointment.'],
+                        ['3', 'Confirm your booking', 'Review the details and receive a discreet appointment confirmation.'],
                     ] as [$step, $title, $copy])
                         <li class="rounded-3xl border border-white/10 bg-white/[0.06] p-6">
                             <span class="grid size-9 place-items-center rounded-full bg-bha-500 text-sm font-black">{{ $step }}</span>
@@ -144,8 +144,8 @@
         <div class="public-container">
             <div class="overflow-hidden rounded-[2.5rem] bg-bha-700 px-7 py-14 text-center text-white sm:px-12 sm:py-20">
                 <p class="text-xs font-bold uppercase tracking-[0.22em] text-bha-200">Your next step can be simple</p>
-                <h2 class="mx-auto mt-5 max-w-3xl font-display text-3xl font-semibold leading-tight sm:text-5xl">When you are ready, start with a brief enquiry.</h2>
-                <p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-bha-100">Read the booking information first, or contact us about individual, school or community support.</p>
+                <h2 class="mx-auto mt-5 max-w-3xl font-display text-3xl font-semibold leading-tight sm:text-5xl">When you are ready, choose a suitable time to talk.</h2>
+                <p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-bha-100">Book from available appointments, or contact us about individual, school or community support.</p>
                 <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                     <a href="{{ route('booking') }}" class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-bold text-bha-800 transition hover:bg-bha-50">Book an Appointment</a>
                     <a href="{{ route('contact') }}" class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/30 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10">Send an enquiry</a>

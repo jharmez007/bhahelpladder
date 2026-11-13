@@ -1,21 +1,23 @@
 # BHA Help Ladder roadmap
 
-Phase 1 is implemented in this repository: public pages, built-in authentication and verification, role-isolated dashboard shells, secure administrator provisioning, and persisted rate-limited general enquiries.
+Phases 1 and 2 are implemented in this repository: the public site and account foundation plus a database-backed, role-isolated appointment workflow.
 
-## Phase 2 — Working appointments
+## Phase 2 — Working appointments (implemented)
 
-- Add database-backed services, counsellor profiles, durations, fees, modes, working hours, breaks, buffers and blocked dates.
-- Let clients choose a service, in-person/online mode, counsellor and available time, then review and submit.
-- Store timestamps in UTC and display them in `Africa/Lagos` with a visible timezone label.
-- Prevent overlaps atomically in database transactions under simultaneous requests; define which statuses reserve availability.
-- Implement authorized transitions for pending, confirmed, cancelled, completed and no-show appointments.
-- Add client self-service cancellation/rescheduling rules, counsellor availability and assigned-booking tools, and administrator assignment/booking tools.
-- Show staff-entered online meeting details only to the relevant client and counsellor.
-- Queue discreet confirmation, status and reminder emails; prevent duplicate reminders.
+- [x] Database-backed services, counsellor profiles, durations, optional fees, modes, working hours, breaks, buffers and blocked dates.
+- [x] Client selection, review, booking history, cancellation and rescheduling.
+- [x] UTC timestamp storage with `Africa/Lagos` portal display and visible WAT labels.
+- [x] Atomic overlap prevention using per-counsellor database row locks and transactions for create, reassign and reschedule; pending and confirmed statuses reserve availability.
+- [x] Server-authorized transitions for pending, confirmed, cancelled, completed and no-show appointments.
+- [x] Configurable notice, cancellation, rescheduling, booking-horizon and reminder rules.
+- [x] Counsellor availability/assigned-booking tools and administrator service, assignment and booking tools.
+- [x] Encrypted online meeting details shown only in authorized portal views.
+- [x] Queued, discreet request/status/reminder emails with database-enforced reminder deduplication.
+- [x] Focused SQLite workflow tests plus a separate two-process MySQL/InnoDB concurrency test.
 
 ## Phase 3 — Administration and insights
 
-- Manage services, counsellors, enquiries and appointments.
+- Extend operational administration with audit history and bulk-safe workflows.
 - Add clearly defined, date-filtered metrics from real queries: bookings, completed sessions, cancellations, no-shows, service demand and counsellor utilisation, including honest empty states.
 - Add authorized CSV export with spreadsheet-formula injection protection.
 - Audit important administrative and booking changes without recording sensitive enquiry text.

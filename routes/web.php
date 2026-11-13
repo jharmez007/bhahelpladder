@@ -23,13 +23,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('role:client')
         ->name('client.dashboard');
 
+    Route::prefix('client')->middleware('role:client')->name('client.')->group(function () {
+        Volt::route('appointments/book', 'client.book-appointment')->name('appointments.book');
+        Volt::route('appointments', 'client.appointments')->name('appointments.index');
+    });
+
     Route::view('counsellor/dashboard', 'dashboards.counsellor')
         ->middleware('role:counsellor')
         ->name('counsellor.dashboard');
 
+    Route::prefix('counsellor')->middleware('role:counsellor')->name('counsellor.')->group(function () {
+        Volt::route('availability', 'counsellor.availability')->name('availability');
+        Volt::route('appointments', 'counsellor.appointments')->name('appointments.index');
+    });
+
     Route::prefix('admin')->middleware('role:administrator')->name('admin.')->group(function () {
         Route::view('dashboard', 'dashboards.admin')->name('dashboard');
         Route::get('enquiries', [EnquiryController::class, 'index'])->name('enquiries.index');
+        Volt::route('booking-setup', 'admin.booking-setup')->name('booking-setup');
+        Volt::route('appointments', 'admin.appointments')->name('appointments.index');
     });
 });
 

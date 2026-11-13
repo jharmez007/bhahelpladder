@@ -14,7 +14,7 @@
                     <p class="font-display text-4xl font-semibold leading-tight">“{{ config('organization.motto') }}”</p>
                     <p class="mt-5 text-sm text-bha-200">Secure access for clients, counsellors and administrators.</p>
                 </div>
-                <p class="text-xs text-bha-300">{{ config('organization.location') }}</p>
+                <span aria-hidden="true"></span>
             </div>
             <div class="flex min-h-screen items-center justify-center p-6 sm:p-10">
                 <div class="w-full max-w-md">

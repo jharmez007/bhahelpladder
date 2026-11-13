@@ -1,6 +1,6 @@
 @props([
     'title' => null,
-    'description' => 'Counselling and mental health advocacy support in Abuja, Nigeria.',
+    'description' => 'Counselling and mental health advocacy support from BHA Help Ladder.',
 ])
 <!DOCTYPE html>
 <html lang="en">
@@ -20,10 +20,7 @@
                         <img src="{{ asset(config('organization.logo_path')) }}" alt="BHA Help Ladder" class="h-12 w-auto max-w-48 object-contain">
                     @else
                         <span class="grid size-10 place-items-center rounded-2xl bg-bha-600 text-sm font-black text-white" aria-hidden="true">BHA</span>
-                        <span class="leading-tight">
-                            <span class="block text-sm font-extrabold tracking-tight text-ink">BHA Help Ladder</span>
-                            <span class="block text-[10px] font-semibold uppercase tracking-[0.16em] text-bha-600">Abuja, Nigeria</span>
-                        </span>
+                        <span class="text-sm font-extrabold tracking-tight text-ink">BHA Help Ladder</span>
                     @endif
                 </a>
 
@@ -77,7 +74,6 @@
                 <div>
                     <p class="font-display text-2xl font-semibold">BHA Help Ladder</p>
                     <p class="mt-3 max-w-md text-sm leading-7 text-zinc-300">{{ config('organization.motto') }}</p>
-                    <p class="mt-5 text-sm font-semibold text-bha-300">{{ config('organization.location') }}</p>
                 </div>
                 <div>
                     <p class="text-xs font-bold uppercase tracking-[0.2em] text-bha-300">Explore</p>

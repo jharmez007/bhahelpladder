@@ -9,7 +9,7 @@ use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.public', [
     'title' => 'Contact',
-    'description' => 'Send a brief general enquiry to BHA Help Ladder in Abuja.',
+    'description' => 'Send a brief general enquiry to BHA Help Ladder.',
 ])] class extends Component {
     public string $name = '';
     public string $email = '';

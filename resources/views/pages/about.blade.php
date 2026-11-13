@@ -1,6 +1,6 @@
 <x-layouts.public
     title="About"
-    description="Learn about BHA Help Ladder, a counselling and mental health advocacy organisation in Abuja, Nigeria."
+    description="Learn about BHA Help Ladder, a counselling and mental health advocacy organisation."
 >
     <section class="bg-bha-50 py-16 sm:py-24">
         <div class="public-container grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
@@ -8,7 +8,7 @@
                 <p class="eyebrow">About BHA Help Ladder</p>
                 <h1 class="display-title mt-5">Helping people find steadier ground, one step at a time.</h1>
             </div>
-            <p class="text-lg leading-8 text-zinc-600">BHA Help Ladder is a counselling and mental health advocacy organisation in Abuja, Nigeria, serving individuals, schools and communities.</p>
+            <p class="text-lg leading-8 text-zinc-600">BHA Help Ladder is a counselling and mental health advocacy organisation supporting individuals, schools and communities.</p>
         </div>
     </section>
 

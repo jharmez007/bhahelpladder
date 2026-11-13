@@ -67,6 +67,21 @@
         color: var(--color-ink);
     }
 
+    input[data-flux-control],
+    textarea[data-flux-control],
+    select[data-flux-control] {
+        background-color: var(--color-white);
+        border-color: var(--color-zinc-300);
+        color: var(--color-zinc-900);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+    }
+
+    input[data-flux-control]::placeholder,
+    textarea[data-flux-control]::placeholder {
+        color: var(--color-zinc-500);
+        opacity: 1;
+    }
+
     ::selection {
         background: var(--color-bha-200);
         color: var(--color-bha-900);
