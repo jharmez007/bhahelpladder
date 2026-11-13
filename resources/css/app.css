@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source "../views";
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Segoe UI', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    --font-display: Georgia, Cambria, 'Times New Roman', serif;
+
+    --color-bha-50: #faf8fc;
+    --color-bha-100: #f2ebf6;
+    --color-bha-200: #e4d4eb;
+    --color-bha-300: #cfb2da;
+    --color-bha-400: #b384c1;
+    --color-bha-500: #945ca7;
+    --color-bha-600: #70358c;
+    --color-bha-700: #5d2b75;
+    --color-bha-800: #4e285f;
+    --color-bha-900: #41234f;
+    --color-ink: #050b09;
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-accent: var(--color-bha-600);
+    --color-accent-content: var(--color-bha-700);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        color: var(--color-ink);
+    }
+
+    ::selection {
+        background: var(--color-bha-200);
+        color: var(--color-bha-900);
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--color-bha-400);
+        outline-offset: 3px;
+    }
+}
+
+@layer components {
+    .public-container {
+        @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+    }
+
+    .eyebrow {
+        @apply text-xs font-bold uppercase tracking-[0.22em] text-bha-700;
+    }
+
+    .display-title {
+        font-family: var(--font-display);
+        @apply text-4xl leading-[1.08] font-semibold tracking-[-0.025em] text-ink sm:text-5xl lg:text-6xl;
+    }
+
+    .section-title {
+        font-family: var(--font-display);
+        @apply text-3xl leading-tight font-semibold tracking-[-0.02em] text-ink sm:text-4xl;
+    }
+
+    .btn-primary {
+        @apply inline-flex min-h-12 items-center justify-center rounded-full bg-bha-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-bha-600/15 transition hover:-translate-y-0.5 hover:bg-bha-700 focus-visible:outline-bha-500;
+    }
+
+    .btn-secondary {
+        @apply inline-flex min-h-12 items-center justify-center rounded-full border border-bha-200 bg-white px-6 py-3 text-sm font-bold text-bha-800 transition hover:-translate-y-0.5 hover:border-bha-400 hover:bg-bha-50;
+    }
+
+    .soft-card {
+        @apply rounded-3xl border border-bha-100 bg-white p-6 shadow-[0_20px_60px_-35px_rgba(70,35,82,0.35)] sm:p-8;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+[data-flux-field] {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */
