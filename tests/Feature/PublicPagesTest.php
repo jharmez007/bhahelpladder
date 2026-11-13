@@ -6,6 +6,20 @@ use Tests\TestCase;
 
 class PublicPagesTest extends TestCase
 {
+    public function test_health_check_exposes_only_a_success_status(): void
+    {
+        $response = $this->get('/up')
+            ->assertOk()
+            ->assertHeader('content-type', 'text/html; charset=UTF-8');
+
+        foreach (array_filter([
+            config('app.key'),
+            config('database.connections.pgsql.password'),
+        ]) as $secret) {
+            $response->assertDontSee($secret);
+        }
+    }
+
     public function test_public_pages_are_available(): void
     {
         foreach (['/', '/about', '/services', '/programs', '/booking', '/contact'] as $path) {

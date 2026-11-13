@@ -14,6 +14,30 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     environment: Testing
+    env:
+      DB_CONNECTION: pgsql
+      DATABASE_URL: ''
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: bha_help_ladder_test
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_SSLMODE: disable
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: bha_help_ladder_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d bha_help_ladder_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - name: Checkout
@@ -23,6 +47,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
+          extensions: pdo_pgsql, mbstring, intl, gd, zip
           tools: composer:v2
           coverage: xdebug
 
@@ -33,10 +58,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Node Dependencies
-        run: npm i
-
-      - name: Create SQLite Database
-        run: touch database/database.sqlite
+        run: npm ci
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
@@ -49,6 +71,9 @@ jobs:
 
       - name: Build Assets
         run: npm run build
+
+      - name: Run Migrations on Isolated PostgreSQL
+        run: php artisan migrate:fresh --force --no-interaction
 
       - name: Run Tests
         run: ./vendor/bin/phpunit

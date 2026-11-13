@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
-    public function __construct(private AvailabilityService $availability) {}
+    public function __construct(
+        private AvailabilityService $availability,
+        private AppointmentNotificationDelivery $notifications,
+    ) {}
 
     public function createForClient(
         User $client,
@@ -33,7 +36,8 @@ class BookingService
         }
 
         $appointment = DB::transaction(function () use ($client, $service, $profile, $mode, $startsAtUtc): Appointment {
-            $profile = CounsellorProfile::query()->lockForUpdate()->findOrFail($profile->id);
+            $this->lockProfiles([$profile->id]);
+            $profile = CounsellorProfile::query()->findOrFail($profile->id);
             $service = Service::query()->lockForUpdate()->findOrFail($service->id);
 
             $this->assertServiceConfiguration($service, $profile, $mode);
@@ -42,8 +46,8 @@ class BookingService
             return $this->persistAppointment($client, $service, $profile, $mode, $startsAtUtc);
         }, 3);
 
-        $client->notify(new AppointmentRequestedNotification($appointment));
-        $appointment->counsellorProfile->user->notify(new AppointmentRequestedNotification($appointment));
+        $this->notifications->send($client, new AppointmentRequestedNotification($appointment));
+        $this->notifications->send($appointment->counsellorProfile->user, new AppointmentRequestedNotification($appointment));
 
         return $appointment;
     }
@@ -71,7 +75,7 @@ class BookingService
             $this->lockProfiles([$appointment->counsellor_profile_id, $targetProfileId]);
 
             $targetProfile = CounsellorProfile::query()->findOrFail($targetProfileId);
-            $service = Service::query()->findOrFail($appointment->service_id);
+            $service = Service::query()->lockForUpdate()->findOrFail($appointment->service_id);
             $this->assertServiceConfiguration($service, $targetProfile, $appointment->session_mode);
 
             // Validate before mutating so a rejected reschedule leaves the original intact.
@@ -84,8 +88,8 @@ class BookingService
             return $appointment->fresh(['client', 'counsellorProfile.user', 'service']);
         }, 3);
 
-        $appointment->client->notify(new AppointmentRescheduledNotification($appointment));
-        $appointment->counsellorProfile->user->notify(new AppointmentRescheduledNotification($appointment));
+        $this->notifications->send($appointment->client, new AppointmentRescheduledNotification($appointment));
+        $this->notifications->send($appointment->counsellorProfile->user, new AppointmentRescheduledNotification($appointment));
 
         return $appointment;
     }
@@ -238,11 +242,14 @@ class BookingService
     /** @param list<int> $profileIds */
     private function lockProfiles(array $profileIds): void
     {
-        CounsellorProfile::query()
-            ->whereKey(array_values(array_unique($profileIds)))
-            ->orderBy('id')
-            ->lockForUpdate()
-            ->get();
+        $profileIds = array_values(array_unique($profileIds));
+        sort($profileIds, SORT_NUMERIC);
+
+        // Lock one row at a time in a deterministic order. PostgreSQL then
+        // serializes every create, assignment and reschedule for a counsellor.
+        foreach ($profileIds as $profileId) {
+            CounsellorProfile::query()->lockForUpdate()->findOrFail($profileId);
+        }
     }
 
     private function authorizeReschedule(User $actor, Appointment $appointment): void
@@ -274,7 +281,7 @@ class BookingService
 
     private function sendStatusNotifications(Appointment $appointment): void
     {
-        $appointment->client->notify(new AppointmentStatusChangedNotification($appointment));
-        $appointment->counsellorProfile->user->notify(new AppointmentStatusChangedNotification($appointment));
+        $this->notifications->send($appointment->client, new AppointmentStatusChangedNotification($appointment));
+        $this->notifications->send($appointment->counsellorProfile->user, new AppointmentStatusChangedNotification($appointment));
     }
 }

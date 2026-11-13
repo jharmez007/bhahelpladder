@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Symfony\Component\Process\Process;
 use Tests\TestCase;
 
-class MySqlConcurrentBookingTest extends TestCase
+class PostgreSqlConcurrentBookingTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -22,11 +22,16 @@ class MySqlConcurrentBookingTest extends TestCase
     {
         parent::setUp();
 
-        if (config('database.default') !== 'mysql') {
-            $this->markTestSkipped('This test requires MySQL/InnoDB and is intentionally not treated as an SQLite concurrency test.');
+        if (config('database.default') !== 'pgsql') {
+            $this->fail('This concurrency test requires PostgreSQL.');
         }
 
-        if (! str_ends_with((string) config('database.connections.mysql.database'), '_test')) {
+        $url = (string) config('database.connections.pgsql.url');
+        $database = $url !== ''
+            ? trim((string) parse_url($url, PHP_URL_PATH), '/')
+            : (string) config('database.connections.pgsql.database');
+
+        if (! str_ends_with($database, '_test')) {
             $this->fail('The concurrency test may run only against a database whose name ends in _test.');
         }
     }
@@ -57,8 +62,14 @@ class MySqlConcurrentBookingTest extends TestCase
             (string) $barrier,
         ], base_path(), [
             'APP_ENV' => 'testing',
-            'DB_CONNECTION' => 'mysql',
-            'DB_DATABASE' => (string) config('database.connections.mysql.database'),
+            'DB_CONNECTION' => 'pgsql',
+            'DATABASE_URL' => (string) config('database.connections.pgsql.url'),
+            'DB_HOST' => (string) config('database.connections.pgsql.host'),
+            'DB_PORT' => (string) config('database.connections.pgsql.port'),
+            'DB_DATABASE' => (string) config('database.connections.pgsql.database'),
+            'DB_USERNAME' => (string) config('database.connections.pgsql.username'),
+            'DB_PASSWORD' => (string) config('database.connections.pgsql.password'),
+            'DB_SSLMODE' => (string) config('database.connections.pgsql.sslmode'),
             'QUEUE_CONNECTION' => 'sync',
             'MAIL_MAILER' => 'array',
         ]));
@@ -118,8 +129,14 @@ class MySqlConcurrentBookingTest extends TestCase
             (string) $barrier,
         ], base_path(), [
             'APP_ENV' => 'testing',
-            'DB_CONNECTION' => 'mysql',
-            'DB_DATABASE' => (string) config('database.connections.mysql.database'),
+            'DB_CONNECTION' => 'pgsql',
+            'DATABASE_URL' => (string) config('database.connections.pgsql.url'),
+            'DB_HOST' => (string) config('database.connections.pgsql.host'),
+            'DB_PORT' => (string) config('database.connections.pgsql.port'),
+            'DB_DATABASE' => (string) config('database.connections.pgsql.database'),
+            'DB_USERNAME' => (string) config('database.connections.pgsql.username'),
+            'DB_PASSWORD' => (string) config('database.connections.pgsql.password'),
+            'DB_SSLMODE' => (string) config('database.connections.pgsql.sslmode'),
             'QUEUE_CONNECTION' => 'sync',
             'MAIL_MAILER' => 'array',
         ]));
@@ -136,6 +153,6 @@ class MySqlConcurrentBookingTest extends TestCase
 
         $starts = Appointment::query()->orderBy('starts_at_utc')->pluck('starts_at_utc')->map(fn ($start) => CarbonImmutable::parse($start)->setTimezone(config('booking.timezone'))->format('H:i'));
         $this->assertSame(1, $starts->filter(fn (string $start) => $start === '12:00')->count());
-        $this->assertTrue($starts->contains('10:00') || $starts->contains('14:00'));
+        $this->assertSame(1, $starts->filter(fn (string $start) => in_array($start, ['10:00', '14:00'], true))->count(), 'The failed reschedule must preserve its original time.');
     }
 }
