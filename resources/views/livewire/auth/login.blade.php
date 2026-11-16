@@ -24,6 +24,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     public function login(): void
     {
+        $this->email = Str::lower(trim($this->email));
+
         $this->validate();
 
         $this->ensureIsNotRateLimited();

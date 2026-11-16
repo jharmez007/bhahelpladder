@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
 
@@ -25,6 +26,7 @@ new class extends Component {
     public function updateProfileInformation(): void
     {
         $user = Auth::user();
+        $this->email = Str::lower(trim($this->email));
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],

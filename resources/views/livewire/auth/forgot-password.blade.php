@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
@@ -12,6 +13,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     public function sendPasswordResetLink(): void
     {
+        $this->email = Str::lower(trim($this->email));
+
         $this->validate([
             'email' => ['required', 'string', 'email'],
         ]);

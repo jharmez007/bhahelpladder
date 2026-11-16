@@ -49,6 +49,8 @@ On Windows PowerShell where script execution blocks `npm.ps1`, use `npm.cmd inst
 
 The development site is available at `http://127.0.0.1:8000`. Laravel's `composer run dev` also starts the queue listener, log viewer and Vite development server.
 
+Use the same local hostname consistently. Local HTTP should keep `SESSION_SECURE_COOKIE=false` and `SESSION_DOMAIN=null`; Render production uses secure-only cookies behind its trusted HTTPS proxy. If local configuration changes, stop every existing `artisan serve` process, run `php artisan config:clear`, and start one development server. Multiple servers on the same port with different cached settings can split the page request from its Livewire submission and cause a 419 “Page Expired” response. Never work around this by changing `APP_KEY` or disabling CSRF.
+
 Appointment timestamps are stored in UTC and displayed in `Africa/Lagos`. The booking window, minimum notice, client cancellation/rescheduling deadlines and reminder lead time are configured with the `BOOKING_*` values documented in `.env.example`.
 
 ## Create staff accounts

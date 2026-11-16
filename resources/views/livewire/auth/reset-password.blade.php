@@ -32,6 +32,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     public function resetPassword(): void
     {
+        $this->email = Str::lower(trim($this->email));
+
         $this->validate([
             'token' => ['required'],
             'email' => ['required', 'string', 'email'],

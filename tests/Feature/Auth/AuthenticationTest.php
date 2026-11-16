@@ -4,7 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt as LivewireVolt;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -22,7 +22,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = LivewireVolt::test('auth.login')
+        $response = Livewire::test('auth.login')
             ->set('email', $user->email)
             ->set('password', 'password')
             ->call('login');
@@ -34,14 +34,29 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticated();
     }
 
+    public function test_login_normalizes_email_address_for_postgresql(): void
+    {
+        $user = User::factory()->create(['email' => 'client@example.com']);
+
+        Livewire::test('auth.login')
+            ->set('email', '  CLIENT@EXAMPLE.COM  ')
+            ->set('password', 'password')
+            ->call('login')
+            ->assertHasNoErrors()
+            ->assertRedirect(route('dashboard', absolute: false));
+
+        $this->assertAuthenticatedAs($user);
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();
 
-        $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'wrong-password',
-        ]);
+        Livewire::test('auth.login')
+            ->set('email', $user->email)
+            ->set('password', 'wrong-password')
+            ->call('login')
+            ->assertHasErrors(['email']);
 
         $this->assertGuest();
     }

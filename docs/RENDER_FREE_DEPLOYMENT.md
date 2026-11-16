@@ -67,6 +67,8 @@ Set these on the web service under **Environment**:
 
 Keep the existing `BOOKING_*` values unless the approved policy changes. `DB_WAIT_ATTEMPTS` and `DB_WAIT_DELAY_SECONDS` are optional; defaults are 20 attempts and 3 seconds.
 
+Leave `SESSION_DOMAIN` unset for the default `onrender.com` hostname. Do not set it to a URL, include `https://`, or copy a local hostname into production. Keep the same `APP_KEY` for every deploy; changing it invalidates encrypted sessions and other encrypted application data.
+
 Generate a new Laravel key locally and copy its output directly to Render's secret environment field:
 
 ```powershell
@@ -106,6 +108,40 @@ Remove the temporary environment variables from the terminal session afterward a
 3. Log in with the separately provisioned administrator, configure a service/counsellor schedule, register a client, and complete one test booking. Confirm the booking remains after a service restart and that both parties receive discreet email.
 4. Cancel or reschedule the test booking and verify the portal history and email. Inspect logs for safe delivery warnings without private appointment content.
 5. Restart/redeploy the web service and confirm database-backed login sessions/cache and appointment data remain in PostgreSQL. Files written only inside the container are not persistent.
+
+## Authentication configuration and diagnosis
+
+For Render authentication, the required values are:
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://<service-name>.onrender.com
+APP_KEY=<the existing persistent key>
+SESSION_DRIVER=database
+SESSION_ENCRYPT=true
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
+```
+
+`SESSION_DOMAIN` should remain unset unless a reviewed custom-domain requirement needs it. After changing environment variables, redeploy so `docker/start-render.sh` clears and rebuilds Laravel's configuration cache. Do not regenerate `APP_KEY`, disable CSRF, make production cookies insecure, or expose debug mode.
+
+If login returns HTTP 500, open the Render web service **Logs**, reproduce once, and capture the first exception line plus the following stack excerpt. Redact database URLs, credentials, API keys, cookies, CSRF tokens and email addresses. Useful exception categories include database/session-table errors, missing or changed encryption keys, decryption failures, and filesystem/cache permission errors; the exception text is required before selecting a fix.
+
+For local HTTP development, use one hostname consistently and keep environment-specific values local:
+
+```dotenv
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+SESSION_DRIVER=database
+SESSION_ENCRYPT=false
+SESSION_SECURE_COOKIE=false
+SESSION_DOMAIN=null
+```
+
+After changing local values, run `php artisan config:clear`, stop all existing development-server processes, restart the server, and clear cookies only for the old local hostname if the browser retained a stale Secure cookie. This does not modify accounts, appointments or database records.
 
 ## Free-tier limits
 
